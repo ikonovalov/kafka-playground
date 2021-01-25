@@ -12,7 +12,7 @@ import static org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CON
 public class Admin {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         Properties config = new Properties();
-        config.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9091,localhost:9092,localhost:9093");
         AdminClient admin = AdminClient.create(config);
 
         try {
@@ -22,7 +22,7 @@ public class Admin {
             System.err.println(e.getMessage());
         }
 
-        NewTopic topic = new NewTopic("dev-mpart", 4, (short)1);
+        NewTopic topic = new NewTopic("dev-mpart", 4, (short)2);
         Map<String, String> cfg = new HashMap<>();
         cfg.put("delete.retention.ms", "60000");
         topic.configs(cfg);

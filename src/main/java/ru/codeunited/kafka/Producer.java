@@ -20,7 +20,7 @@ public class Producer {
 
     public static void main(String[] args) {
         Properties properties = new Properties();
-        properties.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        properties.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9091,localhost:9092,localhost:9093");
         properties.put(KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         properties.put(VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 

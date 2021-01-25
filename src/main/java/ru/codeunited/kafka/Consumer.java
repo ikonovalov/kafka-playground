@@ -18,7 +18,7 @@ public class Consumer {
     public static void main(String[] args) {
         Properties properties = new Properties();
 
-        properties.put("bootstrap.servers", "127.0.0.1:9092");
+        properties.put("bootstrap.servers", "localhost:9091,localhost:9092,localhost:9093");
         properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put("group.id", System.getProperty("group.id", "GR-ONE"));
