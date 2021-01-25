@@ -23,9 +23,7 @@ public class Consumer {
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put("group.id", System.getProperty("group.id", "GR-ONE"));
         properties.put("client.id", System.getProperty("client.id", "CL-ONE"));
-        properties.put("enable.auto.commit", "true");
-        properties.put("auto.commit.interval.ms", "1000");
-        properties.put("session.timeout.ms", "30000");
+        properties.put("enable.auto.commit", "false");
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
@@ -41,6 +39,7 @@ public class Consumer {
                         record.value()
                 );
             }
+            consumer.commitSync(Duration.ofSeconds(5));
         }
     }
 }
