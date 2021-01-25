@@ -28,7 +28,7 @@ public class Producer {
         try {
             long rndPoint = System.currentTimeMillis();
             for (int i = 0; i < 1000; i++) {
-                ProducerRecord<String, String> record = new ProducerRecord<>("dev-topic", "Message - " + (rndPoint++));
+                ProducerRecord<String, String> record = new ProducerRecord<>("dev-mpart", "Message - " + (rndPoint++));
                 Future<RecordMetadata> send = kafkaProducer.send(record);
                 RecordMetadata recordMetadata = send.get(1, TimeUnit.SECONDS);
                 log.info(rndPoint + " => "

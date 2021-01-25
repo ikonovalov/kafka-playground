@@ -29,7 +29,7 @@ public class Consumer {
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
-        consumer.subscribe(asList("dev-topic"));
+        consumer.subscribe(asList("dev-mpart"));
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));

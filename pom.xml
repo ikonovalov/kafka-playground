@@ -48,7 +48,7 @@
                         <configuration>
                             <classifier>sb</classifier>
                             <mainClass>
-                                ru.codeunited.kafka.Runner
+                                ru.codeunited.kafka.Admin
                             </mainClass>
                         </configuration>
                     </execution>
