@@ -33,13 +33,14 @@ public class Consumer {
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-            for (ConsumerRecord<String, String> record : records)
-                log.info("partitio={} offset={} key={} value={}",
+            for (ConsumerRecord<String, String> record : records) {
+                log.info("partition={} offset={} key={} value={}",
                         record.partition(),
                         record.offset(),
                         record.key(),
                         record.value()
                 );
+            }
         }
     }
 }

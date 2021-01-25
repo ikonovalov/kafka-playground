@@ -3,6 +3,8 @@ package ru.codeunited.kafka;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,24 +26,21 @@ public class Producer {
         properties.put(KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         properties.put(VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
-        KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties);
-        try {
-            long rndPoint = System.currentTimeMillis();
+        try (KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties)) {
+            int rndPoint = 0;
             for (int i = 0; i < 1000; i++) {
-                ProducerRecord<String, String> record = new ProducerRecord<>("dev-mpart", "Message - " + (rndPoint++));
+                ProducerRecord<String, String> record = new ProducerRecord<>("dev-mpart", "msg=" + (rndPoint++));
                 Future<RecordMetadata> send = kafkaProducer.send(record);
                 RecordMetadata recordMetadata = send.get(1, TimeUnit.SECONDS);
                 log.info(rndPoint + " => "
-                        + recordMetadata.topic()  + ":"
-                        + recordMetadata.partition() + ":"
-                        + recordMetadata.offset()
+                        + recordMetadata.topic()
+                        + ":p" + recordMetadata.partition()
+                        + ":o" + recordMetadata.offset()
                 );
-                Thread.sleep(500);
+                Thread.sleep(1000);
             }
         } catch (Exception e) {
             log.error("ru.codeunited.kafka.Producer error", e);
-        } finally {
-            kafkaProducer.close();
         }
     }
 }
