@@ -7,13 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Properties;
 
-import static java.util.Arrays.asList;
+public class ConsumerAutocommit {
 
-public class Consumer {
-
-    private static final Logger log = LoggerFactory.getLogger(Consumer.class);
+    private static final Logger log = LoggerFactory.getLogger(ConsumerAutocommit.class);
 
     public static void main(String[] args) {
         Properties properties = new Properties();
@@ -23,11 +22,14 @@ public class Consumer {
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put("group.id", System.getProperty("group.id", "GR-ONE"));
         properties.put("client.id", System.getProperty("client.id", "CL-ONE"));
-        properties.put("enable.auto.commit", "false");
+
+        // auto-commit settings
+        properties.put("enable.auto.commit", "true");
+        properties.put("auto.commit.interval.ms", "10000"); // default 5000
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
-        consumer.subscribe(asList("dev-mpart"));
+        consumer.subscribe(Collections.singletonList("dev-mpart"));
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
@@ -39,7 +41,6 @@ public class Consumer {
                         record.value()
                 );
             }
-            consumer.commitSync(Duration.ofSeconds(5));
         }
     }
 }

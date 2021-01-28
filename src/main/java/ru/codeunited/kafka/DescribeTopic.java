@@ -2,8 +2,6 @@ package ru.codeunited.kafka;
 
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.TopicPartitionInfo;
-import org.apache.kafka.common.config.ConfigResource;
-import org.apache.kafka.common.errors.TopicExistsException;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;

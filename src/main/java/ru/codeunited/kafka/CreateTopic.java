@@ -2,7 +2,6 @@ package ru.codeunited.kafka;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.errors.TopicExistsException;
 
 import java.util.Collections;
 import java.util.HashMap;
