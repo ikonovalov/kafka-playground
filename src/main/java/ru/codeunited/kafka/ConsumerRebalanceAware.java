@@ -56,23 +56,22 @@ public class ConsumerRebalanceAware {
 
         @Override
         public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
-            System.out.println("Partitions Assigned ....");
+            log.info("Partitions Assigned ....");
             for (TopicPartition partition : partitions)
-                System.out.println(partition);
+                log.info("{}",partition);
         }
 
         @Override
         public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
-            System.out.println("Following Partitions Revoked ....");
+            log.warn("Following Partitions Revoked ....");
             for (TopicPartition partition : partitions)
-                System.out.println(partition.partition() + ",");
-
-
-            System.out.println("Following Partitions commited ....");
-            for (TopicPartition tp : currentOffsets.keySet())
-                System.out.println(tp.partition());
+                log.warn(partition.partition() + ",");
 
             consumer.commitSync(currentOffsets);
+            log.warn("Following Partitions commited ....");
+            for (TopicPartition tp : currentOffsets.keySet())
+                log.warn("{}", tp);
+
             currentOffsets.clear();
         }
     }
