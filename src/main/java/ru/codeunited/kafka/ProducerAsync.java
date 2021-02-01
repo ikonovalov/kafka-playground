@@ -9,8 +9,8 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG;
-import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
-import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.producer.ProducerConfig.*;
+import static org.apache.kafka.clients.producer.ProducerConfig.ACKS_CONFIG;
 
 public class ProducerAsync {
 
@@ -21,6 +21,8 @@ public class ProducerAsync {
         properties.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9091,localhost:9092,localhost:9093");
         properties.put(KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         properties.put(VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        properties.put(MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
+        properties.put(ACKS_CONFIG, "1");
 
         try (KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties)) {
             final AtomicInteger rndPoint = new AtomicInteger(0);
