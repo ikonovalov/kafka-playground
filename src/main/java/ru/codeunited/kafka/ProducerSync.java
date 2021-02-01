@@ -14,9 +14,9 @@ import static org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CON
 import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 
-public class Producer {
+public class ProducerSync {
 
-    private static final Logger log = LoggerFactory.getLogger(Producer.class);
+    private static final Logger log = LoggerFactory.getLogger(ProducerSync.class);
 
     public static void main(String[] args) {
         Properties properties = new Properties();
@@ -29,12 +29,8 @@ public class Producer {
             for (int i = 0; i < 1000; i++) {
                 ProducerRecord<String, String> record = new ProducerRecord<>("dev-mpart", "msg=" + (rndPoint++));
                 Future<RecordMetadata> send = kafkaProducer.send(record);
-                RecordMetadata recordMetadata = send.get(1, TimeUnit.SECONDS);
-                log.info(rndPoint + " => "
-                        + recordMetadata.topic()
-                        + ":p" + recordMetadata.partition()
-                        + ":o" + recordMetadata.offset()
-                );
+                RecordMetadata meta = send.get(1, TimeUnit.SECONDS);
+                log.info("{} => {}:p{}:o{}", rndPoint, meta.topic(), meta.partition(), meta.offset());
                 Thread.sleep(1000);
             }
         } catch (Exception e) {
