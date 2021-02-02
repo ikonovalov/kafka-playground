@@ -37,6 +37,7 @@ public class ConsumerRebalanceAware {
                 );
                 rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
             }
+            consumer.commitSync();
         }
     }
 
