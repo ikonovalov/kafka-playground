@@ -23,13 +23,13 @@ public class CreateTopic {
         AdminClient admin = AdminClient.create(config);
 
         String topicName = "dev-mpart";
-        short replicationFactor = 2;
+        short replicationFactor = 3;
         int partitions = 4;
 
         NewTopic topic = new NewTopic(topicName, partitions, replicationFactor);
         Map<String, String> cfg = new HashMap<>();
         cfg.put("delete.retention.ms", "60000");
-        cfg.put("min.insync.replicas", "1"); // default 1
+        cfg.put("min.insync.replicas", "2"); // default 1
         topic.configs(cfg);
         log.info("{}", topic);
         admin.createTopics(Collections.singleton(topic)).all().get();
