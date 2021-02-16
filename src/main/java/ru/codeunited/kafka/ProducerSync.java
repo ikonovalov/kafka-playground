@@ -27,7 +27,7 @@ public class ProducerSync {
         properties.put(KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         properties.put(VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         properties.put(ACKS_CONFIG, "all");
-        properties.put(CLIENT_ID_CONFIG, "producer-sync-1");
+        properties.put(CLIENT_ID_CONFIG, "producer-sync-2");
 
 
         try (KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties)) {
@@ -40,7 +40,7 @@ public class ProducerSync {
                 Future<RecordMetadata> send = kafkaProducer.send(record);
                 RecordMetadata meta = send.get(1, TimeUnit.SECONDS);
                 log.info("{} => {}:p{}:o{}", rndPoint, meta.topic(), meta.partition(), meta.offset());
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             }
             kafkaProducer.close(Duration.ofSeconds(2));
         } catch (Exception e) {
