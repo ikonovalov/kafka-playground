@@ -25,7 +25,8 @@ public class ConsumerAsyncCommit {
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
-        consumer.subscribe(Collections.singletonList("dev-mpart"));
+        String topicName = System.getProperty("topic", "dev-mpart");
+        consumer.subscribe(Collections.singletonList(topicName));
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
@@ -38,7 +39,7 @@ public class ConsumerAsyncCommit {
                 );
             }
             consumer.commitAsync((offsets, exception) -> {
-                Optional.ofNullable(exception).ifPresent(e -> log.error("Transaction failed"));
+                Optional.ofNullable(exception).ifPresent(e -> log.error("Transaction failed. {}", e.getMessage()));
             });
         }
     }

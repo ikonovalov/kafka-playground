@@ -22,8 +22,8 @@ public class CreateTopic {
         config.put(BOOTSTRAP_SERVERS_CONFIG, "localhost:9091,localhost:9092,localhost:9093");
         AdminClient admin = AdminClient.create(config);
 
-        String topicName = "dev-mpart";
-        short replicationFactor = 3;
+        String topicName = System.getProperty("topic", "dev-mpart");
+        short replicationFactor = 2;
         int partitions = 4;
 
         NewTopic topic = new NewTopic(topicName, partitions, replicationFactor);

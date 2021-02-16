@@ -87,6 +87,31 @@ services:
     depends_on:
       - zookeeper
 
+  jobmanager:
+    image: flink:1.12.0-scala_2.11
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    networks:
+      - kaf
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+
+  taskmanager:
+    image: flink:1.12.0-scala_2.11
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    networks:
+      - kaf
+    scale: 2
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 10
 
 networks:
   kaf:
