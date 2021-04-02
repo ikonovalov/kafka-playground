@@ -24,7 +24,11 @@ public class ConsumerRebalanceAware {
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
         CommitOnRebalanceListener rebalanceListener = new CommitOnRebalanceListener(consumer);
-        consumer.subscribe(Collections.singletonList("dev-mpart"), rebalanceListener);
+
+        String topic = System.getProperty("topic", "dev-mpart");
+        List<String> topics = Collections.singletonList(topic);
+        consumer.subscribe(topics, rebalanceListener);
+        log.info("Subscribe to {}", topics);
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
