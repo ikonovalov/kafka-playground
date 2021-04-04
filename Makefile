@@ -27,7 +27,7 @@ topic-delete:
 
 # Flink
 flink-bash:
-	docker-compose exec jobmanager bash
+	docker-compose exec jobmanager1 bash
 jar-rebuild:
 	mvn clean package
 jar-upload:

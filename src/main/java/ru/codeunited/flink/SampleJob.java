@@ -45,14 +45,24 @@ public class SampleJob {
                 Optional.of(new FlinkFixedPartitioner<>())
         );
 
-        MapFunction<String, String> transform = s -> s + " FLINKED";
+        MapFunction<Integer, Integer> toNegative = s -> -s;
         FilterFunction<String> notEmptyOnly = value -> value != null && value.trim().length() > 0;
-
+        FilterFunction<String> allowOnlyIntegers = value -> {
+            try {
+                Integer.valueOf(value);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        };
         env
                 .addSource(source)
-                .filter(notEmptyOnly).setParallelism(4)
-                .map(transform).setParallelism(2)
-                .addSink(sink).setParallelism(2);
+                .filter(notEmptyOnly)
+                .filter(allowOnlyIntegers)
+                .map(Integer::valueOf)
+                .map(toNegative)
+                .map(Object::toString)
+                .addSink(sink);
 
         env.execute();
     }
