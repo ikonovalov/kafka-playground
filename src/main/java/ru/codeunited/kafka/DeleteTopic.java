@@ -14,7 +14,8 @@ public class DeleteTopic {
         AdminClient admin = AdminClient.create(config);
 
         try {
-            admin.deleteTopics(Collections.singleton("dev-mpart")).all().get();
+            String topic = System.getProperty("topic", "dev-mpart");
+            admin.deleteTopics(Collections.singleton(topic)).all().get();
             System.out.println("Deleted");
         } catch (Exception e) {
             System.err.println(e.getMessage());

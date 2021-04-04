@@ -10,6 +10,7 @@ services:
       - '2181:2181'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+
   kafka1:
     image: 'docker.io/bitnami/kafka:2-debian-10'
     networks:
@@ -87,22 +88,56 @@ services:
     depends_on:
       - zookeeper
 
-  jobmanager:
+  jobmanager1:
     image: flink:1.12.0-scala_2.11
+    depends_on:
+      - zookeeper
     ports:
       - "8081:8081"
     command: jobmanager
+    volumes:
+      - "./recovery:/tmp/flink/recovery:rw"
     networks:
       - kaf
     environment:
       - |
         FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
+        restart-strategy: fixeddelay
+        restart-strategy.fixed-delay.attempts: 3
+        restart-strategy.fixed-delay.delay: 10 s
+        high-availability: zookeeper
+        high-availability.storageDir: file:///tmp/flink/recovery
+        high-availability.zookeeper.quorum: zookeeper:2181
+        high-availability.cluster-id: /default_flink
+
+  jobmanager2:
+    image: flink:1.12.0-scala_2.11
+    depends_on:
+      - zookeeper
+    ports:
+      - "8082:8081"
+    command: jobmanager
+    volumes:
+      - "./recovery:/tmp/flink/recovery:rw"
+    networks:
+      - kaf
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        restart-strategy: fixeddelay
+        restart-strategy.fixed-delay.attempts: 3
+        restart-strategy.fixed-delay.delay: 10 s
+        high-availability: zookeeper
+        high-availability.storageDir: file:///tmp/flink/recovery
+        high-availability.zookeeper.quorum: zookeeper:2181
+        high-availability.cluster-id: /default_flink
 
   taskmanager:
     image: flink:1.12.0-scala_2.11
     depends_on:
-      - jobmanager
+      - zookeeper
+      - jobmanager1
+      - jobmanager2
     command: taskmanager
     networks:
       - kaf
@@ -110,8 +145,14 @@ services:
     environment:
       - |
         FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 10
+        restart-strategy: fixeddelay
+        restart-strategy.fixed-delay.attempts: 3
+        restart-strategy.fixed-delay.delay: 10 s
+        high-availability: zookeeper
+        high-availability.storageDir: file:///tmp/flink/recovery
+        high-availability.zookeeper.quorum: zookeeper:2181
+        high-availability.cluster-id: /default_flink
 
 networks:
   kaf:

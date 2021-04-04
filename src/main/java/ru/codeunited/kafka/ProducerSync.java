@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.PartitionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Int;
 
 import java.time.Duration;
 import java.util.List;
@@ -31,18 +32,19 @@ public class ProducerSync {
 
 
         try (KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties)) {
-            String topic = "dev-mpart";
+            String topic = System.getProperty("topic", "dev-mpart");
             List<PartitionInfo> partitionInfos = kafkaProducer.partitionsFor(topic);
             log.info("{}", partitionInfos);
             int rndPoint = 0;
             for (int i = 0; i < 1000; i++) {
-                ProducerRecord<String, String> record = new ProducerRecord<>(topic, "msg=" + (rndPoint++));
+                ProducerRecord<String, String> record = new ProducerRecord<>(topic, String.valueOf(rndPoint++));
                 Future<RecordMetadata> send = kafkaProducer.send(record);
                 RecordMetadata meta = send.get(1, TimeUnit.SECONDS);
-                log.info("{} => {}:p{}:o{}", rndPoint, meta.topic(), meta.partition(), meta.offset());
-                Thread.sleep(1000);
+                //log.info("{} => {}:p{}:o{}", rndPoint, meta.topic(), meta.partition(), meta.offset());
+                //Thread.sleep(1000);
             }
             kafkaProducer.close(Duration.ofSeconds(2));
+            log.info("Producer closed");
         } catch (Exception e) {
             log.error("ru.codeunited.kafka.Producer error", e);
         }
