@@ -23,7 +23,9 @@ topic-create:
 	docker-compose exec kafka1 bash -c 'kafka-topics.sh --bootstrap-server `hostname`:9092 --create --topic=$(name) --partitions 10 --replication-factor 2'
 topic-delete:
 	docker-compose exec kafka1 bash -c 'kafka-topics.sh --bootstrap-server `hostname`:9092 --delete --topic=$(name)'
-
+topic-default-create:
+	docker-compose exec kafka1 bash -c 'kafka-topics.sh --bootstrap-server `hostname`:9092 --create --topic=dev-mpart --partitions 10 --replication-factor 2'
+	docker-compose exec kafka2 bash -c 'kafka-topics.sh --bootstrap-server `hostname`:9092 --create --topic=sink-topic --partitions 10 --replication-factor 2'
 
 # Flink
 flink-bash:
